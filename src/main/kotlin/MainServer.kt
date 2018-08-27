@@ -1,3 +1,4 @@
+import javafx.application.Platform
 import java.io.DataInputStream
 import java.io.IOException
 import java.io.OutputStream
@@ -5,36 +6,46 @@ import java.io.PrintStream
 import java.net.ServerSocket
 import java.net.Socket
 
-class Server : Runnable {
+class MainServer(private val port: Int, val view: MainView) : Runnable {
+
+    var isRunning: Boolean = false
 
     private var connection: Socket? = null
     private var inputStream: DataInputStream? = null
 
     override fun run() {
         try {
-            val serverSocket = ServerSocket(8080, 10)
+            Platform.runLater {
+                view.serverStarted()
+            }
+            val serverSocket = ServerSocket(port, 10)
             while (true) {
                 connection = serverSocket.accept()
+                Platform.runLater {
+                    view.connectionReceived("""Connection received from: ${connection?.inetAddress?.hostName}""")
+                }
                 println("Connection received from: " + connection?.inetAddress?.hostName)
 
                 val buffer = ByteArray(1024)
 
-                if (connection != null) {
-                    val socketServerReplyThread = SocketServerReplyThread(connection!!)
-                    socketServerReplyThread.run()
+                val socketServerReplyThread = SocketServerReplyThread(connection!!)
+                socketServerReplyThread.run()
 
-                    inputStream = DataInputStream(connection?.getInputStream())
-                }
+                inputStream = DataInputStream(connection?.getInputStream())
 
                 while (inputStream?.read(buffer) != -1) {
-                    val len = inputStream?.readInt()
-                    val data = len?.let { ByteArray(it) }
-                    inputStream?.readFully(data)
-                    val message = data?.let { String(it, Charsets.UTF_8) }
-                    println(message)
+                    val string = String(buffer, 0, inputStream!!.read(buffer))
+
+                    Platform.runLater {
+                        view.receivedMessage(string)
+                    }
+                    println(string)
+                }
+
+                Platform.runLater {
+                    view.connectionClosed()
                 }
                 println("Socket has closed!")
-                System.exit(0)
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -64,6 +75,7 @@ class Server : Runnable {
             try {
                 inputStream?.close()
                 connection?.close()
+                isRunning = false
             } catch (e: IOException) {
                 e.printStackTrace()
             }

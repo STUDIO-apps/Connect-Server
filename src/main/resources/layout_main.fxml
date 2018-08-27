@@ -1,14 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="$CONTROLLER_NAME$"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane prefHeight="783.0" prefWidth="635.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Main">
+   <children>
+      <AnchorPane fx:id="toolbar" prefHeight="100.0" prefWidth="608.0" style="-fx-background-color: #009688;">
+         <children>
 
+            <ImageView fx:id="toolbar_dash_button" fitHeight="60.0" fitWidth="60.0" layoutX="45.0" layoutY="20.0" onMouseClicked="#selected" onMouseEntered="#entered" onMouseExited="#exited" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/dashboard.png" />
+               </image>
+            </ImageView>
+
+            <ImageView fx:id="toolbar_contact_button" fitHeight="60.0" fitWidth="60.0" layoutX="195.0" layoutY="20.0" onMouseClicked="#selected" onMouseEntered="#entered" onMouseExited="#exited" opacity="0.8" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/people.png" />
+               </image>
+            </ImageView>
+
+            <ImageView fx:id="toolbar_messages_button" fitHeight="60.0" fitWidth="60.0" layoutX="345.0" layoutY="20.0" onMouseClicked="#selected" onMouseEntered="#entered" onMouseExited="#exited" opacity="0.8" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/messages.png" />
+               </image>
+            </ImageView>
+
+            <ImageView fx:id="toolbar_settings_button" fitHeight="60.0" fitWidth="60.0" layoutX="495.0" layoutY="20.0" onMouseClicked="#selected" onMouseEntered="#entered" onMouseExited="#exited" opacity="0.8" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/settings.png" />
+               </image>
+            </ImageView>
+
+         </children>
+      </AnchorPane>
+
+      <AnchorPane fx:id="view_container" layoutY="113.0" prefHeight="641.0" prefWidth="608.0" style="-fx-background-color: #009688;">
+         <children>
+            <AnchorPane fx:id="view_dashboard" prefHeight="641.0" prefWidth="608.0" style="-fx-background-color: #009688;">
+               <children>
+                  <Label layoutX="50.0" layoutY="34.0" text="Status" textFill="WHITE">
+                     <font>
+                        <Font name="Roboto Bold" size="25.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="50.0" layoutY="79.0" text="Server address" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <JFXTextField alignment="CENTER" editable="false" focusColor="#ff9800" layoutX="163.0" layoutY="76.0" prefHeight="25.0" prefWidth="125.0" style="-jfx-focus-color: #FFFFFF; -jfx-unfocus-color: #FFFFFF; -fx-prompt-text-fill: #FFFFFF;" text="192.168.1.0" unFocusColor="WHITE" />
+                  <JFXTextField fx:id="field_port" alignment="CENTER" focusColor="WHITE" layoutX="316.0" layoutY="77.0" prefHeight="25.0" prefWidth="60.0" promptText="Port" text="8080" unFocusColor="WHITE" />
+                  <Label layoutX="302.0" layoutY="81.0" text=":">
+                     <font>
+                        <Font name="Roboto Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="52.0" layoutY="125.0" text="Client status" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="client_status_label" layoutX="163.0" layoutY="125.0" text="Disconnected" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <JFXButton alignment="CENTER" layoutX="398.0" layoutY="76.0" mnemonicParsing="false" onAction="#setPort" prefHeight="25.0" prefWidth="84.0" ripplerFill="#f57a00a8" style="-fx-background-color: #FFA726; -fx-background-radius: 5em;" text="Save" />
+                  <JFXButton fx:id="button_server" alignment="CENTER" layoutX="229.0" layoutY="173.0" mnemonicParsing="false" onAction="#startMainService" prefHeight="34.0" prefWidth="146.0" ripplerFill="#f57a00a8" style="-fx-background-color: #FFA726; -fx-background-radius: 5em;" text="Start server">
+                     <font>
+                        <Font size="14.0" />
+                     </font></JFXButton>
+                  <Label fx:id="server_status_label" alignment="CENTER" layoutX="0" layoutY="219.0" prefHeight="17.0" prefWidth="608" text="Server is not running" textFill="WHITE" />
+                  <JFXTextArea fx:id="text_area" focusColor="WHITE" layoutX="204.0" layoutY="267.0" prefHeight="200.0" prefWidth="200.0" unFocusColor="WHITE" />
+               </children>
+            </AnchorPane>
+
+            <AnchorPane fx:id="view_contacts" prefHeight="641.0" prefWidth="608.0" style="-fx-background-color: #009688;" visible="false">
+               <children>
+                  <Label layoutX="27.0" layoutY="22.0" text="Contacts" textFill="#ff9800">
+                     <font>
+                        <Font name="Roboto Bold" size="24.0" />
+                     </font>
+                  </Label>
+                  <JFXTreeTableView layoutX="27.0" layoutY="55.0" prefHeight="559.0" prefWidth="550.0">
+                     <columnResizePolicy>
+                        <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </JFXTreeTableView>
+               </children>
+            </AnchorPane>
+
+         </children>
+         <effect>
+            <DropShadow blurType="TWO_PASS_BOX" />
+         </effect></AnchorPane>
+   </children>
 </AnchorPane>
