@@ -1,17 +1,15 @@
 import javafx.application.Platform
-import java.io.DataInputStream
-import java.io.IOException
-import java.io.OutputStream
-import java.io.PrintStream
+import java.io.*
 import java.net.ServerSocket
 import java.net.Socket
 
-class MainServer(private val port: Int, val view: MainView) : Runnable {
+class MainServer(private val port: Int, private val view: MainView) : Runnable {
 
     var isRunning: Boolean = false
 
     private var connection: Socket? = null
-    private var inputStream: DataInputStream? = null
+    //private var inputStream: DataInputStream? = null
+    private var input: ObjectInputStream? = null
 
     override fun run() {
         try {
@@ -19,7 +17,7 @@ class MainServer(private val port: Int, val view: MainView) : Runnable {
                 view.serverStarted()
             }
             val serverSocket = ServerSocket(port, 10)
-            while (true) {
+            while (isRunning) {
                 connection = serverSocket.accept()
                 Platform.runLater {
                     view.connectionReceived("""Connection received from: ${connection?.inetAddress?.hostName}""")
@@ -28,23 +26,30 @@ class MainServer(private val port: Int, val view: MainView) : Runnable {
 
                 val buffer = ByteArray(1024)
 
-                val socketServerReplyThread = SocketServerReplyThread(connection!!)
+                val socketServerReplyThread = SocketServerReplyThread(connection)
                 socketServerReplyThread.run()
 
-                inputStream = DataInputStream(connection?.getInputStream())
+                //inputStream = DataInputStream(connection?.getInputStream())
 
-                while (inputStream?.read(buffer) != -1) {
-                    val string = String(buffer, 0, inputStream!!.read(buffer))
+                input = ObjectInputStream(connection?.getInputStream())
+
+                while (isRunning) {
+                    println(input?.readObject() as ArrayList<ContactsModel>)
+                }
+
+                /*while (inputStream?.read(buffer) != -1 && isRunning) {
+                    //val string = String(buffer, 0, inputStream!!.read(buffer))
 
                     Platform.runLater {
                         view.receivedMessage(string)
                     }
                     println(string)
-                }
+                }*/
 
                 Platform.runLater {
                     view.connectionClosed()
                 }
+
                 println("Socket has closed!")
             }
         } catch (e: IOException) {
@@ -52,14 +57,14 @@ class MainServer(private val port: Int, val view: MainView) : Runnable {
         }
     }
 
-    private inner class SocketServerReplyThread internal constructor(private val hostSocket: Socket) : Thread() {
+    private inner class SocketServerReplyThread internal constructor(private val hostSocket: Socket?) : Thread() {
 
         override fun run() {
-            val outputStream: OutputStream
+            val outputStream: OutputStream?
             val connectMessage = "You have connected to the server!"
 
             try {
-                outputStream = hostSocket.getOutputStream()
+                outputStream = hostSocket?.getOutputStream()
                 val printStream = PrintStream(outputStream)
                 printStream.print(connectMessage)
             } catch (e: IOException) {
@@ -73,7 +78,7 @@ class MainServer(private val port: Int, val view: MainView) : Runnable {
     fun closeConnection() {
         if (connection != null) {
             try {
-                inputStream?.close()
+                //inputStream?.close()
                 connection?.close()
                 isRunning = false
             } catch (e: IOException) {

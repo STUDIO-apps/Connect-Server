@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="connect_server_main.jnlp">
+  <information>
+    <title>Connect Server</title>
+    <vendor>Unknown</vendor>
+    <description>connect-server_main</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="connect_server_main.jar" size="18166" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="600" height="400" main-class="Main"  name="connect-server_main" />
+  <update check="background"/>
+</jnlp>

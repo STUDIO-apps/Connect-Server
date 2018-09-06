@@ -56,8 +56,6 @@ class Main : Application(), MainView, Initializable {
     var button_server: JFXButton? = null
     @FXML
     var client_status_label: Label? = null
-    @FXML
-    var text_area: JFXTextArea? = null
 
     init {
         presenter = MainPresenterImpl(this)
@@ -158,6 +156,6 @@ class Main : Application(), MainView, Initializable {
     }
 
     override fun receivedMessage(message: String) {
-        text_area?.text = message
+        println(message)
     }
 }

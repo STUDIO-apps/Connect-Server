@@ -16,11 +16,12 @@ class MainPresenterImpl(val view: MainView) : MainPresenter {
 
     override fun startServer() {
         if (!server.isRunning) {
-            thread.start()
             server.isRunning = true
+            thread.start()
         } else {
+            server.isRunning = false
             server.closeConnection()
-            thread.interrupt()
+            //thread.join()
             view.serverClosed()
         }
     }
