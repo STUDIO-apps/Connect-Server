@@ -1,3 +1,5 @@
+package uk.co.appsbystudio.connect
+
 import javafx.scene.image.ImageView
 
 class MainPresenterImpl(val view: MainView) : MainPresenter {
@@ -27,6 +29,6 @@ class MainPresenterImpl(val view: MainView) : MainPresenter {
     }
 
     override fun stopServer() {
-        server.closeConnection()
+        server.closeConnection();
     }
 }

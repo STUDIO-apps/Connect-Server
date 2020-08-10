@@ -1,3 +1,5 @@
+package uk.co.appsbystudio.connect
+
 interface MainView {
 
     fun serverStarted()

@@ -1,5 +1,6 @@
+package uk.co.appsbystudio.connect
+
 import com.jfoenix.controls.JFXButton
-import com.jfoenix.controls.JFXTextArea
 import com.jfoenix.controls.JFXTextField
 import javafx.application.Application
 import javafx.fxml.FXML
@@ -16,6 +17,7 @@ import javafx.stage.Stage
 import javafx.stage.StageStyle
 import java.net.URL
 import java.util.*
+import kotlin.collections.ArrayList
 
 fun main(args: Array<String>) {
     Application.launch(Main::class.java, *args)
@@ -62,7 +64,7 @@ class Main : Application(), MainView, Initializable {
     }
 
     override fun start(primaryStage: Stage?) {
-        val root = FXMLLoader.load<Parent>(javaClass.getResource("layout_main.fxml"))
+        val root = FXMLLoader.load<Parent>(javaClass.classLoader.getResource("layout_main.fxml"))
 
         val scene = Scene(root, Color.TRANSPARENT)
 

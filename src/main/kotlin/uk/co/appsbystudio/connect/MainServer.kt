@@ -1,4 +1,7 @@
+package uk.co.appsbystudio.connect
+
 import javafx.application.Platform
+import uk.co.appsbystudio.connect.data.models.ContactsModel
 import java.io.*
 import java.net.ServerSocket
 import java.net.Socket
@@ -8,7 +11,6 @@ class MainServer(private val port: Int, private val view: MainView) : Runnable {
     var isRunning: Boolean = false
 
     private var connection: Socket? = null
-    //private var inputStream: DataInputStream? = null
     private var input: ObjectInputStream? = null
 
     override fun run() {
@@ -24,27 +26,8 @@ class MainServer(private val port: Int, private val view: MainView) : Runnable {
                 }
                 println("Connection received from: " + connection?.inetAddress?.hostName)
 
-                val buffer = ByteArray(1024)
-
                 val socketServerReplyThread = SocketServerReplyThread(connection)
                 socketServerReplyThread.run()
-
-                //inputStream = DataInputStream(connection?.getInputStream())
-
-                input = ObjectInputStream(connection?.getInputStream())
-
-                while (isRunning) {
-                    println(input?.readObject() as ArrayList<ContactsModel>)
-                }
-
-                /*while (inputStream?.read(buffer) != -1 && isRunning) {
-                    //val string = String(buffer, 0, inputStream!!.read(buffer))
-
-                    Platform.runLater {
-                        view.receivedMessage(string)
-                    }
-                    println(string)
-                }*/
 
                 Platform.runLater {
                     view.connectionClosed()
@@ -72,6 +55,15 @@ class MainServer(private val port: Int, private val view: MainView) : Runnable {
             }
 
 
+        }
+    }
+
+    fun getData() {
+        input = ObjectInputStream(connection?.getInputStream())
+
+        while (isRunning) {
+            val contact: ContactsModel = (input?.readObject() as ArrayList<ContactsModel>)[0]
+            println(contact.name)
         }
     }
 

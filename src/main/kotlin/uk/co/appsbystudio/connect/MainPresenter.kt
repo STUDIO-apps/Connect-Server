@@ -1,3 +1,5 @@
+package uk.co.appsbystudio.connect
+
 import javafx.scene.image.ImageView
 
 interface MainPresenter {

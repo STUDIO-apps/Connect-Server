@@ -1,0 +1,31 @@
+language: java
+
+jdk:
+  - oraclejdk8
+
+notifications:
+  email:
+    - admin@zac-h.co.uk
+    on_failure: change
+
+after_success: gradle sonarqube -Dsonar.organization=zacdevil10-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_KEY
+
+before_install:
+  - chmod +x gradlew
+  - chmod +x gradle/wrapper/gradle-wrapper.jar
+
+script:
+  - ./gradlew test build
+
+deploy:
+  provider: releases
+  api_key: $GH_TOKEN
+  file: build/libs/Connect-Server.jar
+  skip_cleanup: true
+  overwrite: true
+  tag_name: $TRAVIS_TAG
+  target_commitish: $TRAVIS_COMMIT
+  on:
+    repo: zacdevil10/Travis-CI-JUnit-Test
+    branch: master
+    tags: true
